@@ -66,7 +66,7 @@ inline void dfs(int x)
 int main()
 {
     freopen("running.in", "r", stdin);
-    freopen("running.out", "w", stdout);
+    freopen("running.out", "w", stdout)
     scanf("%d", &n);
     REP(i, 1, n - 1)
     {
