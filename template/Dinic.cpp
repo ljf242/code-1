@@ -21,66 +21,66 @@ struct edge
     int Next, To, W;
 } Edge[maxn];
 
-int Begin[maxn], Head[maxn], n, m, s, t, e, dis[maxn];
+int Begin[maxn], n, m, s, t, e = -1, dis[maxn];
 bool vis[maxn];
 
 inline void add(int u, int v, int w)
 {
-    Edge[e].To = v;
+    Edge[++ e].To = v;
     Edge[e].Next = Begin[u];
     Begin[u] = e;
     Edge[e].W = w;
-    ++ e;
 }
 
 inline bool BFS(int s, int t)
 {
     queue<int> Q;
     Q.push(s);
-    REP(i, 1, n) { Head[i] = Begin[i]; dis[i] = INF; }
-    dis[s] = 0;
-    while ( !Q.empty() )
-    {
+    mem(dis);
+    dis[s] = 1;
+    do {
         int x = Q.front(); Q.pop();
         if ( x == t )  break ;
         for ( int i = Begin[x]; i; i = Edge[i].Next )
         {
             int u = Edge[i].To;
-            if ( dis[u] == INF && Edge[i].W ) 
+            if ( dis[u] == 0 && Edge[i].W > 0 ) 
             {
                 dis[u] = dis[x] + 1;
                 Q.push(u);
             }
         }
-    }
-    if ( dis[t] == INF ) return false;
+    }while ( !Q.empty() );
+    if ( dis[t] == 0 ) return false;
     return true;
 }
 
-inline int DFS(int now, int t, int Minflow)
+inline int DFS(int now, int t, int flow)
 {
-    if ( !Minflow || now == t ) return Minflow;
-    int flow = 0, f;
-    for ( int i = Head[now]; i; i = Edge[i].Next )
+    if ( now == t ) return flow;
+    int f;
+    for ( int i = Begin[now]; i; i = Edge[i].Next )
     {
-        Head[now] = i;
-        if ( dis[Edge[i].To] == dis[now] + 1 && (f = DFS(Edge[i].To, t, min(Minflow, Edge[i].W))) )
+        if ( dis[Edge[i].To] == dis[now] + 1 && Edge[i].W != 0 )
         {
-            flow += f;
-            Minflow -= f;
-            Edge[i].W -= f;
-            Edge[i ^ 1].W += f;
-            if ( ! Minflow ) break ;
+            f = DFS(Edge[i].To, t, min(flow, Edge[i].W));
+            if ( f > 0 )
+            {
+                Edge[i].W -= f;
+                Edge[i ^ 1].W += f;
+                return f;
+            }
         }
     }
-    return flow;
+    return 0;
 }
 
 inline int Dinic(int s, int t)
 {
     int Maxflow = 0;
     while ( BFS(s, t) )
-        Maxflow += DFS(s, t, INF);
+        while ( int flow = DFS(s, t, INF) )
+            Maxflow += flow;
     return Maxflow;
 }
 
