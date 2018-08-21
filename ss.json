@@ -1,9 +1,0 @@
-{
-"server":"45.32.67.230",
-"server_port":23333,
-"local_port":23333,
-"password":"czy5518700",
-"timeout":600,
-"method":"aes-256-cfb"
-}
-
