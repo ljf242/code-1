@@ -46,7 +46,15 @@ inline void add(int root, int l, int r, int L, int R, int x)
     }
     int Mid = (l + r) >> 1;
     if ( Mid <= R ) add(lson, l, Mid, L, R, x);
-    if ( 
+    if ( Mid >= L ) add(rson, Mid + 1, r, L, R, x);
+}
+
+inline void solve(int root, int l, int r) 
+{
+    vis[Tree[root].lazy] = true;
+    int Mid = (l + r) >> 1;
+    solve(lson, l, Mid);
+    solve(rson, Mid + 1, r);
 }
 
 int main()
@@ -63,8 +71,12 @@ int main()
         {
             int L, R;
             scanf("%d%d", &L, &R);
-            add(1, 1, n, L, R, a);
+            add(1, 1, n, L, R, i);
         }
+        solve(1, 1, n);
+        int ans = 0;
+        REP(i, 1, n) if ( vis[i] ) ++ ans;
+        printf("%d\n", ans);
     } 
     return 0;
 }
