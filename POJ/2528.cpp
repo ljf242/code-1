@@ -30,7 +30,8 @@ inline void Build(int root, int l, int r)
     Tree[root].l = l; Tree[root].r = r; Tree[root].lazy = 0;
     if ( l == r ) 
     {
-        Tree[root].color = 0; return ;
+        Tree[root].color = 0; 
+        return ;
     }
     int Mid = (l + r) >> 1;
     Build(lson, l, Mid);
